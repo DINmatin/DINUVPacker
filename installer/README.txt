@@ -14,7 +14,14 @@ datierte .backup-Dateien gesichert. Jede kopierte Datei wird per SHA-256 gepruef
 
 In 3ds Max
 -----------
-Customize > Customize User Interface > Toolbars oder Keyboard > Main UI > DIN Tools
+1. 3ds Max nach der Installation neu starten.
+2. Customize > Customize User Interface > Toolbars oeffnen.
+3. Kategorie DIN Tools waehlen.
+4. DIN UV xatlas Pack auf eine Toolbar ziehen.
+5. Einen alten leeren DIN-Button vorher entfernen und neu hinzufuegen.
+
+Der Installer stellt Additional Icons automatisch auf den beschreibbaren
+Benutzerordner um und uebernimmt vorhandene MatinsTools-/BMAX-Icongruppen.
 
 Macro: DIN UV xatlas Pack
 

@@ -12,6 +12,28 @@ library generate new charts, seams and UVs from the evaluated triangle geometry.
 2. Double-click `Install.cmd`.
 3. Restart 3ds Max when convenient so the MacroScript and toolbar icon are loaded.
 
+### Make the toolbar icon visible in 3ds Max 2016
+
+1. Restart 3ds Max after installation; Max 2016 loads legacy icon groups at startup.
+2. Open **Customize > Customize User Interface > Toolbars**.
+3. Select category **DIN Tools**.
+4. Drag **DIN UV xatlas Pack** onto an existing or new toolbar.
+5. If a blank DIN button from an older installation already exists, remove it and
+   drag the action onto the toolbar again.
+
+The installer automatically points Max's **Additional Icons** directory to the
+writable per-user `usericons` folder and preserves existing custom groups such as
+MatinsTools. If the `DINUVPacker` image group still does not appear, run this in
+the MAXScript Listener after replacing `<USER>` and `<LANG>` (usually `ENU`):
+
+```maxscript
+setDir #userIcons @"C:\Users\<USER>\AppData\Local\Autodesk\3dsMax\2016 - 64bit\<LANG>\usericons"
+colorMan.reInitIcons()
+```
+
+Close and reopen **Edit Macro Button** after reloading the groups. Its **Group**
+list should now contain `DINUVPacker`.
+
 The installer needs no administrator rights. It locates the per-user Max 2016
 language profile, creates dated backups of existing files, copies the MacroScript,
 helper executable and legacy Max toolbar bitmaps, then verifies every copy with
