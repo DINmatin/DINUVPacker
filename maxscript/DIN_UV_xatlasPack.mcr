@@ -1,5 +1,5 @@
 /*
-    DIN UV xatlas Pack 0.4.6
+    DIN UV xatlas Pack 0.4.7
     Autodesk 3ds Max 2016 / MAXScript bridge for DINUVPacker.exe.
 
     Packs the existing UV topology or uses xatlas to generate new seams and UVs
@@ -20,6 +20,9 @@ try
         local dinMaxRoot = pathConfig.appendPath dinLocalAppData "Autodesk\\3dsMax\\2016 - 64bit"
         local dinProfileDirectories = getDirectories (pathConfig.appendPath dinMaxRoot "*")
         local dinDesiredIconDirectory = undefined
+        local dinPreferredMacro = pathConfig.appendPath dinMaxRoot "ENU\\usermacros\\DIN_UV_xatlasPack.mcr"
+        if doesFileExist dinPreferredMacro do
+            dinDesiredIconDirectory = pathConfig.appendPath dinMaxRoot "ENU\\usericons"
         for dinProfileDirectory in dinProfileDirectories where dinDesiredIconDirectory == undefined do
         (
             local dinInstalledMacro = pathConfig.appendPath dinProfileDirectory "usermacros\\DIN_UV_xatlasPack.mcr"
@@ -63,7 +66,7 @@ icon:#("DINUVPacker", 1)
 
     try (destroyDialog DIN_UV_xatlasPack_dialog) catch()
 
-    rollout DIN_UV_xatlasPack_dialog "DIN UV xatlas Pack 0.4.6" width:330
+    rollout DIN_UV_xatlasPack_dialog "DIN UV xatlas Pack 0.4.7" width:330
     (
         group "Target Atlas"
         (

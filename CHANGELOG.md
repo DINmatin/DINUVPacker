@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.7 - 2026-08-25
+
+- Update Max 2016's actual `Additional Icons` INI key to the per-user directory.
+- Back up and encoding-safely preserve the UTF-16LE Max configuration.
+- DWORD-align BMP file lengths and `bfSize` headers like MatinsTools.
+- Prefer the known ENU profile before falling back to language enumeration.
+
 ## 0.4.6 - 2026-08-25
 
 - Match the working MatinsTools legacy icon format: 16x16/24x24 RGB color and

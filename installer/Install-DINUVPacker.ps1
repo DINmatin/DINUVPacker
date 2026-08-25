@@ -84,6 +84,33 @@ try {
     $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
     $backups = New-Object 'System.Collections.Generic.List[string]'
 
+    # Max 2016 stores its effective #userIcons path in this UTF-16LE INI value.
+    # Legacy installations may point it at Program Files, making per-user icon
+    # groups invisible. Update only this key and preserve the complete old INI.
+    $maxIni = Join-Path $profile '3dsmax.ini'
+    if (Test-Path -LiteralPath $maxIni -PathType Leaf) {
+        $iniText = Get-Content -Raw -LiteralPath $maxIni
+        $desiredIniLine = "Additional Icons=$userIcons"
+        if ($iniText -notmatch ('(?mi)^' + [regex]::Escape($desiredIniLine) + '$')) {
+            $iniBackup = "$maxIni.backup_$timestamp"
+            Copy-Item -LiteralPath $maxIni -Destination $iniBackup
+            $backups.Add($iniBackup)
+            if ($iniText -match '(?mi)^Additional Icons=.*$') {
+                $iniText = [regex]::Replace($iniText, '(?mi)^Additional Icons=.*$', $desiredIniLine)
+            } elseif ($iniText -match '(?mi)^\[Directories\]\s*$') {
+                $iniText = [regex]::Replace($iniText, '(?mi)^\[Directories\]\s*$', "[Directories]`r`n$desiredIniLine", 1)
+            } else {
+                $iniText += "`r`n[Directories]`r`n$desiredIniLine`r`n"
+            }
+            $unicode = New-Object System.Text.UnicodeEncoding($false, $true)
+            [IO.File]::WriteAllText($maxIni, $iniText, $unicode)
+            $verifiedIni = Get-Content -Raw -LiteralPath $maxIni
+            if ($verifiedIni -notmatch ('(?mi)^' + [regex]::Escape($desiredIniLine) + '$')) {
+                throw "Der 3ds-Max-Benutzer-Iconpfad konnte nicht aktualisiert werden: $maxIni"
+            }
+        }
+    }
+
     # 3ds Max creates this category-prefixed duplicate after certain manual
     # Evaluate/drag-and-drop workflows. Older copies redefine the same macro
     # after our file and silently replace its custom icon with the generic one.

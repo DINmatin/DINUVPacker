@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+import struct
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -48,6 +49,15 @@ def flatten_source(source: Path) -> Image.Image:
     return canvas
 
 
+def pad_legacy_bmp(path: Path) -> None:
+    data = bytearray(path.read_bytes())
+    padding = (-len(data)) % 4
+    if padding:
+        data.extend(b"\0" * padding)
+        struct.pack_into("<I", data, 2, len(data))
+        path.write_bytes(data)
+
+
 def save_max_pair(master: Image.Image, output_dir: Path, size: tuple[int, int], suffix: str) -> None:
     icon = master.copy()
     icon.thumbnail(size, Image.Resampling.LANCZOS)
@@ -58,8 +68,14 @@ def save_max_pair(master: Image.Image, output_dir: Path, size: tuple[int, int], 
     # Max clips the last row of the legacy 16x16 small icon when necessary.
     color = Image.new("RGB", size, CHARCOAL)
     color.paste(rgba.convert("RGB"), mask=rgba.getchannel("A"))
-    color.save(output_dir / f"DINUVPacker_{suffix}i.bmp")
-    Image.new("L", size, 255).save(output_dir / f"DINUVPacker_{suffix}a.bmp")
+    color_path = output_dir / f"DINUVPacker_{suffix}i.bmp"
+    alpha_path = output_dir / f"DINUVPacker_{suffix}a.bmp"
+    color.save(color_path)
+    Image.new("L", size, 255).save(alpha_path)
+    # MatinsTools' working BMPs include trailing NUL bytes so the full file and
+    # bfSize header are DWORD-aligned. Match that legacy writer byte-for-byte.
+    pad_legacy_bmp(color_path)
+    pad_legacy_bmp(alpha_path)
 
 
 def main() -> int:
