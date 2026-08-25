@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.6 - 2026-08-25
+
+- Match the working MatinsTools legacy icon format: 16x16/24x24 RGB color and
+  fully opaque 8-bit alpha bitmaps.
+- Redirect a protected application-folder `#userIcons` setting to the Max user
+  profile while preserving existing custom icon groups.
+- Reload CUI icons before registering the DINUVPacker MacroScript.
+
 ## 0.4.5 - 2026-08-25
 
 - Install a second legacy icon pair beside the calling MacroScript.

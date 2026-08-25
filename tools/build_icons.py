@@ -53,15 +53,13 @@ def save_max_pair(master: Image.Image, output_dir: Path, size: tuple[int, int], 
     icon.thumbnail(size, Image.Resampling.LANCZOS)
     rgba = Image.new("RGBA", size)
     rgba.alpha_composite(icon, ((size[0] - icon.width) // 2, (size[1] - icon.height) // 2))
-    color = Image.new("RGB", size, (0, 0, 0))
+    # Match the known-working matinsTools Max 2016 icon group exactly: an RGB
+    # color bitmap on a dark background and an 8-bit, fully opaque alpha BMP.
+    # Max clips the last row of the legacy 16x16 small icon when necessary.
+    color = Image.new("RGB", size, CHARCOAL)
     color.paste(rgba.convert("RGB"), mask=rgba.getchannel("A"))
     color.save(output_dir / f"DINUVPacker_{suffix}i.bmp")
-    # Max 2016 describes this as 8-bit alpha data, but its shipped legacy
-    # _XXa.bmp files store that grayscale channel in a 24-bit RGB bitmap.
-    # Saving a single-channel paletted BMP makes the icon resolve but render
-    # completely transparent in the classic CUI toolbar.
-    alpha = rgba.getchannel("A")
-    Image.merge("RGB", (alpha, alpha, alpha)).save(output_dir / f"DINUVPacker_{suffix}a.bmp")
+    Image.new("L", size, 255).save(output_dir / f"DINUVPacker_{suffix}a.bmp")
 
 
 def main() -> int:
@@ -73,7 +71,7 @@ def main() -> int:
     master_path = output_dir / "DINUVPacker.png"
     master_512.save(master_path)
     master_512.save(output_dir / "DINUVPacker.ico", sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
-    save_max_pair(master_512, output_dir, (16, 15), "16")
+    save_max_pair(master_512, output_dir, (16, 16), "16")
     save_max_pair(master_512, output_dir, (24, 24), "24")
 
     preview = Image.new("RGBA", (600, 300), (238, 238, 238, 255))

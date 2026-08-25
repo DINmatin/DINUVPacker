@@ -1,5 +1,5 @@
 /*
-    DIN UV xatlas Pack 0.4.5
+    DIN UV xatlas Pack 0.4.6
     Autodesk 3ds Max 2016 / MAXScript bridge for DINUVPacker.exe.
 
     Packs the existing UV topology or uses xatlas to generate new seams and UVs
@@ -8,6 +8,51 @@
     real TriMesh and can insert a non-destructive Turn To Mesh below Unwrap so
     every xatlas seam can be represented exactly.
 */
+
+-- Some legacy Max installations have #userIcons redirected to the protected
+-- application folder (as on the original MatinsTools workstation). Move that
+-- setting to this Max user's writable profile before registering the macro.
+try
+(
+    local dinLocalAppData = systemTools.getEnvVariable "LOCALAPPDATA"
+    if dinLocalAppData != undefined do
+    (
+        local dinMaxRoot = pathConfig.appendPath dinLocalAppData "Autodesk\\3dsMax\\2016 - 64bit"
+        local dinProfileDirectories = getDirectories (pathConfig.appendPath dinMaxRoot "*")
+        local dinDesiredIconDirectory = undefined
+        for dinProfileDirectory in dinProfileDirectories where dinDesiredIconDirectory == undefined do
+        (
+            local dinInstalledMacro = pathConfig.appendPath dinProfileDirectory "usermacros\\DIN_UV_xatlasPack.mcr"
+            if doesFileExist dinInstalledMacro do
+                dinDesiredIconDirectory = pathConfig.appendPath dinProfileDirectory "usericons"
+        )
+
+        if dinDesiredIconDirectory != undefined do
+        (
+            local dinOldIconDirectory = getDir #userIcons
+            if not doesDirectoryExist dinDesiredIconDirectory do makeDir dinDesiredIconDirectory all:true
+
+            -- Preserve existing custom groups such as matinsTools and bmax.
+            if dinOldIconDirectory != undefined and dinOldIconDirectory != dinDesiredIconDirectory and doesDirectoryExist dinOldIconDirectory do
+            (
+                for dinPattern in #("*.bmp", "*.png") do
+                (
+                    local dinOldIcons = getFiles (pathConfig.appendPath dinOldIconDirectory dinPattern)
+                    for dinOldIcon in dinOldIcons do
+                    (
+                        local dinNewIcon = pathConfig.appendPath dinDesiredIconDirectory ((getFilenameFile dinOldIcon) + (getFilenameType dinOldIcon))
+                        if not doesFileExist dinNewIcon do copyFile dinOldIcon dinNewIcon
+                    )
+                )
+            )
+
+            setDir #userIcons dinDesiredIconDirectory
+            colorMan.reInitIcons()
+        )
+    )
+)
+catch (format "DINUVPacker: could not initialize the per-user icon path: %\n" (getCurrentException()))
+
 macroScript DIN_UV_xatlasPack
 category:"DIN Tools"
 tooltip:"DIN UV - Pack Existing Islands with xatlas"
@@ -18,7 +63,7 @@ icon:#("DINUVPacker", 1)
 
     try (destroyDialog DIN_UV_xatlasPack_dialog) catch()
 
-    rollout DIN_UV_xatlasPack_dialog "DIN UV xatlas Pack 0.4.5" width:330
+    rollout DIN_UV_xatlasPack_dialog "DIN UV xatlas Pack 0.4.6" width:330
     (
         group "Target Atlas"
         (
