@@ -91,6 +91,30 @@ try {
     if (Test-Path -LiteralPath $maxIni -PathType Leaf) {
         $iniText = Get-Content -Raw -LiteralPath $maxIni
         $desiredIniLine = "Additional Icons=$userIcons"
+        $migrationDirectories = New-Object 'System.Collections.Generic.List[string]'
+        $oldIniMatch = [regex]::Match($iniText, '(?mi)^Additional Icons=(.*)$')
+        if ($oldIniMatch.Success) {
+            $oldIniIconDirectory = $oldIniMatch.Groups[1].Value.Trim()
+            if ($oldIniIconDirectory) { $migrationDirectories.Add($oldIniIconDirectory) }
+        }
+        $classicApplicationIcons = Join-Path $env:ProgramFiles 'Autodesk\3ds Max 2016\usericons'
+        if (-not $migrationDirectories.Contains($classicApplicationIcons)) {
+            $migrationDirectories.Add($classicApplicationIcons)
+        }
+
+        foreach ($migrationDirectory in $migrationDirectories) {
+            if ($migrationDirectory -ne $userIcons -and (Test-Path -LiteralPath $migrationDirectory -PathType Container)) {
+                Get-ChildItem -LiteralPath $migrationDirectory -File | Where-Object {
+                    $_.Extension -in @('.bmp', '.png')
+                } | ForEach-Object {
+                    $migratedIcon = Join-Path $userIcons $_.Name
+                    if (-not (Test-Path -LiteralPath $migratedIcon -PathType Leaf)) {
+                        Copy-VerifiedFile -Source $_.FullName -Destination $migratedIcon -Timestamp $timestamp -Backups $backups
+                    }
+                }
+            }
+        }
+
         if ($iniText -notmatch ('(?mi)^' + [regex]::Escape($desiredIniLine) + '$')) {
             $iniBackup = "$maxIni.backup_$timestamp"
             Copy-Item -LiteralPath $maxIni -Destination $iniBackup

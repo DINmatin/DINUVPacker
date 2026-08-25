@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.8 - 2026-08-25
+
+- Preserve MatinsTools, BMAX and other existing custom icon groups when moving
+  Max's `Additional Icons` path to the user profile.
+- Read only from the legacy application icon folder; never modify Program Files.
+
 ## 0.4.7 - 2026-08-25
 
 - Update Max 2016's actual `Additional Icons` INI key to the per-user directory.
