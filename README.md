@@ -8,7 +8,7 @@ library generate new charts, seams and UVs from the evaluated triangle geometry.
 
 ## Install a release
 
-1. Download and fully extract `DINUVPacker-0.4.4-Max2016-win64.zip`.
+1. Download and fully extract `DINUVPacker-0.4.5-Max2016-win64.zip`.
 2. Double-click `Install.cmd`.
 3. Restart 3ds Max when convenient so the MacroScript and toolbar icon are loaded.
 
@@ -18,6 +18,9 @@ helper executable and legacy Max toolbar bitmaps, then verifies every copy with
 SHA-256. If several profiles exist, it asks which one to use.
 It also archives an obsolete category-prefixed duplicate created by some manual
 MacroScript workflows, because that duplicate can override the current icon.
+For Max installations with a redirected `#userIcons` path, the legacy bitmap
+pairs are also installed beside the MacroScript, which is another documented
+icon lookup location.
 
 ## Build
 

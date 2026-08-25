@@ -40,4 +40,15 @@ if ($LASTEXITCODE -ne 0) {
     throw "DINUVPacker auto-unwrap validation failed with exit code $LASTEXITCODE."
 }
 
+$degenerateInput = Join-Path $projectRoot 'tests\auto_degenerate.dinuv'
+$degenerateOutput = Join-Path $projectRoot 'tests\auto_degenerate.result'
+& $executable $degenerateInput $degenerateOutput
+if ($LASTEXITCODE -ne 0) {
+    throw "DINUVPacker degenerate-face test execution failed with exit code $LASTEXITCODE."
+}
+python (Join-Path $projectRoot 'tests\validate_auto_degenerate_result.py') $degenerateOutput
+if ($LASTEXITCODE -ne 0) {
+    throw "DINUVPacker degenerate-face validation failed with exit code $LASTEXITCODE."
+}
+
 Write-Output 'DINUVPacker tests passed.'

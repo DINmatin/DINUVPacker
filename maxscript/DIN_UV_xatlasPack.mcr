@@ -1,5 +1,5 @@
 /*
-    DIN UV xatlas Pack 0.4.4
+    DIN UV xatlas Pack 0.4.5
     Autodesk 3ds Max 2016 / MAXScript bridge for DINUVPacker.exe.
 
     Packs the existing UV topology or uses xatlas to generate new seams and UVs
@@ -18,7 +18,7 @@ icon:#("DINUVPacker", 1)
 
     try (destroyDialog DIN_UV_xatlasPack_dialog) catch()
 
-    rollout DIN_UV_xatlasPack_dialog "DIN UV xatlas Pack 0.4.4" width:330
+    rollout DIN_UV_xatlasPack_dialog "DIN UV xatlas Pack 0.4.5" width:330
     (
         group "Target Atlas"
         (
@@ -380,6 +380,7 @@ icon:#("DINUVPacker", 1)
             local atlasHeight = 0
             local expectedVertexCount = 0
             local expectedIndexCount = 0
+            local degenerateVertexCount = 0
 
             while not eof stream do
             (
@@ -432,9 +433,16 @@ icon:#("DINUVPacker", 1)
             local referencedVertices = #{}
             referencedVertices.count = expectedVertexCount
             for outputVertex in outputIndices do referencedVertices[outputVertex] = true
+            -- xatlas intentionally leaves vertices belonging only to zero-area
+            -- triangles without an atlas position. Such geometry has no useful
+            -- UV area, so collapse only those UV corners instead of aborting the
+            -- complete unwrap of the otherwise valid mesh.
             for outputVertex = 1 to expectedVertexCount where referencedVertices[outputVertex] and packedPositions[outputVertex] == undefined do
-                throw ("xatlas could not atlas a vertex referenced by the output faces (vertex " + outputVertex as string + "). Check for degenerate faces.")
-            #(packedPositions, outputIndices, atlasWidth, atlasHeight, chartCount)
+            (
+                packedPositions[outputVertex] = [0, 0, 0]
+                degenerateVertexCount += 1
+            )
+            #(packedPositions, outputIndices, atlasWidth, atlasHeight, chartCount, degenerateVertexCount)
         )
 
         fn DIN_buildFaceOutputMap faceDegrees outputIndices =
@@ -585,7 +593,10 @@ icon:#("DINUVPacker", 1)
                 )
                 completeRedraw()
                 if autoUnwrap then
-                    lbl_status.text = ("Done: " + result[5] as string + " new charts, " + result[1].count as string + " UV vertices, " + result[3] as string + "x" + result[4] as string)
+                (
+                    local degenerateNote = if result[6] > 0 then (", " + result[6] as string + " degenerate UV vertices collapsed") else ""
+                    lbl_status.text = ("Done: " + result[5] as string + " new charts, " + result[1].count as string + " UV vertices, " + result[3] as string + "x" + result[4] as string + degenerateNote)
+                )
                 else
                     lbl_status.text = ("Done: " + topologyInfo[4] as string + " islands / " + result[4] as string + " charts, " + result[5] as string + " UV vertices, " + result[2] as string + "x" + result[3] as string)
                 format "DIN UV xatlas Pack: %\n" lbl_status.text

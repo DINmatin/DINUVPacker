@@ -100,7 +100,14 @@ try {
         @{ Source = Join-Path $payloadRoot 'icons\DINUVPacker_16i.bmp'; Destination = Join-Path $userIcons 'DINUVPacker_16i.bmp' },
         @{ Source = Join-Path $payloadRoot 'icons\DINUVPacker_16a.bmp'; Destination = Join-Path $userIcons 'DINUVPacker_16a.bmp' },
         @{ Source = Join-Path $payloadRoot 'icons\DINUVPacker_24i.bmp'; Destination = Join-Path $userIcons 'DINUVPacker_24i.bmp' },
-        @{ Source = Join-Path $payloadRoot 'icons\DINUVPacker_24a.bmp'; Destination = Join-Path $userIcons 'DINUVPacker_24a.bmp' }
+        @{ Source = Join-Path $payloadRoot 'icons\DINUVPacker_24a.bmp'; Destination = Join-Path $userIcons 'DINUVPacker_24a.bmp' },
+        # Max also searches the directory associated with the calling script.
+        # Keep a second pair beside the MCR for installations whose #userIcons
+        # system path was redirected to the protected application directory.
+        @{ Source = Join-Path $payloadRoot 'icons\DINUVPacker_16i.bmp'; Destination = Join-Path $userMacros 'DINUVPacker_16i.bmp' },
+        @{ Source = Join-Path $payloadRoot 'icons\DINUVPacker_16a.bmp'; Destination = Join-Path $userMacros 'DINUVPacker_16a.bmp' },
+        @{ Source = Join-Path $payloadRoot 'icons\DINUVPacker_24i.bmp'; Destination = Join-Path $userMacros 'DINUVPacker_24i.bmp' },
+        @{ Source = Join-Path $payloadRoot 'icons\DINUVPacker_24a.bmp'; Destination = Join-Path $userMacros 'DINUVPacker_24a.bmp' }
     )
 
     foreach ($file in $files) {
@@ -111,7 +118,7 @@ try {
     Write-Host 'DINUVPacker wurde erfolgreich installiert.' -ForegroundColor Green
     Write-Host "MacroScript: $userMacros\DIN_UV_xatlasPack.mcr"
     Write-Host "Programm:    $userMacros\DINUVPacker.exe"
-    Write-Host "Icons:       $userIcons"
+    Write-Host "Icons:       $userIcons (plus fallback beside the MacroScript)"
     Write-Host 'Bytepruefung: erfolgreich (SHA-256)'
     if ($backups.Count -gt 0) {
         Write-Host 'Sicherungen:'

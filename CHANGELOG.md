@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.5 - 2026-08-25
+
+- Install a second legacy icon pair beside the calling MacroScript.
+- Preserve a successful auto unwrap when xatlas encounters zero-area triangles.
+- Collapse only UV vertices belonging exclusively to degenerate geometry.
+
 ## 0.4.4 - 2026-08-25
 
 - Store legacy alpha masks as RGB bitmaps like the icons shipped with Max 2016.
