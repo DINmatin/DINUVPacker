@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.4 - 2026-08-25
+
+- Store legacy alpha masks as RGB bitmaps like the icons shipped with Max 2016.
+- Fix helper executable discovery across Max 2016 language profiles.
+- Avoid an `undefined`-to-string rollout exception when the helper is missing.
+
 ## 0.4.3 - 2026-08-25
 
 - Archive the legacy `DIN Tools-DIN_UV_xatlasPack.mcr` duplicate during install.

@@ -56,7 +56,12 @@ def save_max_pair(master: Image.Image, output_dir: Path, size: tuple[int, int], 
     color = Image.new("RGB", size, (0, 0, 0))
     color.paste(rgba.convert("RGB"), mask=rgba.getchannel("A"))
     color.save(output_dir / f"DINUVPacker_{suffix}i.bmp")
-    rgba.getchannel("A").save(output_dir / f"DINUVPacker_{suffix}a.bmp")
+    # Max 2016 describes this as 8-bit alpha data, but its shipped legacy
+    # _XXa.bmp files store that grayscale channel in a 24-bit RGB bitmap.
+    # Saving a single-channel paletted BMP makes the icon resolve but render
+    # completely transparent in the classic CUI toolbar.
+    alpha = rgba.getchannel("A")
+    Image.merge("RGB", (alpha, alpha, alpha)).save(output_dir / f"DINUVPacker_{suffix}a.bmp")
 
 
 def main() -> int:

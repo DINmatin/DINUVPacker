@@ -1,4 +1,4 @@
-DINUVPacker 0.4.3 fuer Autodesk 3ds Max 2016 (64-bit)
+DINUVPacker 0.4.4 fuer Autodesk 3ds Max 2016 (64-bit)
 =========================================================
 
 Installation

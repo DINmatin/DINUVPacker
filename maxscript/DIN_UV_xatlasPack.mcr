@@ -1,5 +1,5 @@
 /*
-    DIN UV xatlas Pack 0.4.3
+    DIN UV xatlas Pack 0.4.4
     Autodesk 3ds Max 2016 / MAXScript bridge for DINUVPacker.exe.
 
     Packs the existing UV topology or uses xatlas to generate new seams and UVs
@@ -18,7 +18,7 @@ icon:#("DINUVPacker", 1)
 
     try (destroyDialog DIN_UV_xatlasPack_dialog) catch()
 
-    rollout DIN_UV_xatlasPack_dialog "DIN UV xatlas Pack 0.4.3" width:330
+    rollout DIN_UV_xatlasPack_dialog "DIN UV xatlas Pack 0.4.4" width:330
     (
         group "Target Atlas"
         (
@@ -43,8 +43,18 @@ icon:#("DINUVPacker", 1)
             local localAppData = systemTools.getEnvVariable "LOCALAPPDATA"
             if localAppData == undefined then return undefined
             local maxRoot = pathConfig.appendPath localAppData "Autodesk\\3dsMax\\2016 - 64bit"
-            local matches = getFiles (pathConfig.appendPath maxRoot "*\\usermacros\\DINUVPacker.exe")
-            if matches.count < 1 then undefined else pathConfig.normalizePath matches[1]
+            local preferred = pathConfig.appendPath maxRoot "ENU\\usermacros\\DINUVPacker.exe"
+            if doesFileExist preferred then return pathConfig.normalizePath preferred
+
+            -- Max 2016's getFiles() does not reliably expand a wildcard in a
+            -- parent directory component. Enumerate language profiles first.
+            local profileDirectories = getDirectories (pathConfig.appendPath maxRoot "*")
+            for profileDirectory in profileDirectories do
+            (
+                local candidate = pathConfig.appendPath profileDirectory "usermacros\\DINUVPacker.exe"
+                if doesFileExist candidate then return pathConfig.normalizePath candidate
+            )
+            undefined
         )
 
         fn DIN_getUnwrapModifier node =
@@ -526,7 +536,8 @@ icon:#("DINUVPacker", 1)
             local executable = DIN_getExecutablePath()
             if executable == undefined or not doesFileExist executable then
             (
-                messageBox ("DINUVPacker.exe was not found:\n" + executable) title:"DIN UV xatlas Pack"
+                local executableMessage = if executable == undefined then "No DINUVPacker.exe was found in a Max 2016 user profile." else executable
+                messageBox ("DINUVPacker.exe was not found:\n" + executableMessage) title:"DIN UV xatlas Pack"
                 return false
             )
 

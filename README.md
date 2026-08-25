@@ -8,7 +8,7 @@ library generate new charts, seams and UVs from the evaluated triangle geometry.
 
 ## Install a release
 
-1. Download and fully extract `DINUVPacker-0.4.3-Max2016-win64.zip`.
+1. Download and fully extract `DINUVPacker-0.4.4-Max2016-win64.zip`.
 2. Double-click `Install.cmd`.
 3. Restart 3ds Max when convenient so the MacroScript and toolbar icon are loaded.
 
