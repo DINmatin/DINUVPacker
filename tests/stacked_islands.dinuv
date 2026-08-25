@@ -1,0 +1,25 @@
+DINUVPACK 2
+resolution 512
+padding 8
+texels_per_unit 0
+bilinear 1
+block_align 0
+brute_force 1
+rotate_charts 1
+rotate_to_axis 1
+mesh_count 1
+mesh 0 8 4
+uv 0 0.0 0.0
+uv 1 1.0 0.0
+uv 2 1.0 1.0
+uv 3 0.0 1.0
+uv 4 0.0 0.0
+uv 5 1.0 0.0
+uv 6 1.0 1.0
+uv 7 0.0 1.0
+tri 0 0 1 2 0
+tri 1 0 2 3 0
+tri 2 4 5 6 1
+tri 3 4 6 7 1
+endmesh
+end

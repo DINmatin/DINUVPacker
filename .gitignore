@@ -1,0 +1,6 @@
+.tools/
+dist/
+tests/installer-profile*/
+tests/*.result
+tests/*.log
+*.backup_*

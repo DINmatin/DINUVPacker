@@ -1,0 +1,35 @@
+DINUVPACK 3
+mode auto
+resolution 512
+padding 8
+texels_per_unit 0
+bilinear 1
+block_align 0
+brute_force 1
+rotate_charts 1
+rotate_to_axis 1
+mesh_count 1
+mesh 0 9 12
+pos 0 -1 -1 -1
+pos 1 1 -1 -1
+pos 2 1 1 -1
+pos 3 -1 1 -1
+pos 4 -1 -1 1
+pos 5 1 -1 1
+pos 6 1 1 1
+pos 7 -1 1 1
+pos 8 10 10 10
+tri 0 0 2 1
+tri 1 0 3 2
+tri 2 4 5 6
+tri 3 4 6 7
+tri 4 0 1 5
+tri 5 0 5 4
+tri 6 1 2 6
+tri 7 1 6 5
+tri 8 2 3 7
+tri 9 2 7 6
+tri 10 3 0 4
+tri 11 3 4 7
+endmesh
+end
