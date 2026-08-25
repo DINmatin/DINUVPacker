@@ -83,6 +83,17 @@ try {
 
     $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
     $backups = New-Object 'System.Collections.Generic.List[string]'
+
+    # 3ds Max creates this category-prefixed duplicate after certain manual
+    # Evaluate/drag-and-drop workflows. Older copies redefine the same macro
+    # after our file and silently replace its custom icon with the generic one.
+    $generatedDuplicate = Join-Path $userMacros 'DIN Tools-DIN_UV_xatlasPack.mcr'
+    if (Test-Path -LiteralPath $generatedDuplicate -PathType Leaf) {
+        $duplicateBackup = "$generatedDuplicate.backup_$timestamp"
+        Move-Item -LiteralPath $generatedDuplicate -Destination $duplicateBackup
+        $backups.Add($duplicateBackup)
+    }
+
     $files = @(
         @{ Source = Join-Path $payloadRoot 'DIN_UV_xatlasPack.mcr'; Destination = Join-Path $userMacros 'DIN_UV_xatlasPack.mcr' },
         @{ Source = Join-Path $payloadRoot 'DINUVPacker.exe'; Destination = Join-Path $userMacros 'DINUVPacker.exe' },

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.3 - 2026-08-25
+
+- Archive the legacy `DIN Tools-DIN_UV_xatlasPack.mcr` duplicate during install.
+- Prevent an older duplicate MacroScript definition from replacing the custom icon.
+
 ## 0.4.2 - 2026-08-25
 
 - Add a dedicated legacy 3ds Max toolbar icon with 16x15 and 24x24 alpha pairs.

@@ -1,5 +1,5 @@
 /*
-    DIN UV xatlas Pack 0.4.2
+    DIN UV xatlas Pack 0.4.3
     Autodesk 3ds Max 2016 / MAXScript bridge for DINUVPacker.exe.
 
     Packs the existing UV topology or uses xatlas to generate new seams and UVs
@@ -18,7 +18,7 @@ icon:#("DINUVPacker", 1)
 
     try (destroyDialog DIN_UV_xatlasPack_dialog) catch()
 
-    rollout DIN_UV_xatlasPack_dialog "DIN UV xatlas Pack 0.4.2" width:330
+    rollout DIN_UV_xatlasPack_dialog "DIN UV xatlas Pack 0.4.3" width:330
     (
         group "Target Atlas"
         (
